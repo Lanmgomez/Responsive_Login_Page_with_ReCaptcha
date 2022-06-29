@@ -4,6 +4,7 @@ import {useState} from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import {useRef} from 'react'
 
+
 const Form = ({user}) => {
 
     const [email, setEmail] = useState(user ? (user.email) : (""))
@@ -11,6 +12,13 @@ const Form = ({user}) => {
     /**reCaptcha lógica */
     const [recaptcha, setReCaptcha] = useState(null)
     const [userRecaptcha, setUserRecaptcha] = useState(false)
+    /** Password Eye Hide-Show */
+    const [show, setShow] = useState(false)
+
+    /** Password Eye Hide and Show */
+    const eyePassword = () => {
+        setShow(!show)
+     }
 
     const handleEmail = (e) => {
         setEmail(e.target.value)
@@ -27,20 +35,28 @@ const Form = ({user}) => {
         // recaptcha
         if(captcha.current.getValue()) {
             console.log("The user is not a robot")
+            if (email === "" || password === "") {
+                setUserRecaptcha(false)
+                setReCaptcha(false)
+            }
+            else {
             setUserRecaptcha(true)
             setReCaptcha(true)
-        } else {
+            }
+        } 
+        else {
             console.log("Please, click on the reCaptcha")
             setUserRecaptcha(false)
             setReCaptcha(false)
             setEmail("")
             setPassword("")
         }
+
     }
 
+    //recaptcha
     const captcha = useRef(null)
 
-    //recaptcha
     const onChange = () => {
         if(captcha.current.getValue()) {
             console.log("The user is not a robot")
@@ -78,15 +94,21 @@ const Form = ({user}) => {
                     }
                 </div>
                 <div>
-                    <label>
-                        <span>Password:</span>
-                        <input 
-                            type="password" 
+                    <span>Password:</span>
+                    <label  className={styles.label_password}>
+                        <input className={styles.label_password}
+                            type={show ? "text" : "password"} 
                             name='password' 
                             placeholder='Please, enter with your password...'
                             onChange={handlePassword} 
                             value={password}
                         />
+                    {!show && 
+                        <i className="bi bi-eye" onClick={eyePassword}></i> 
+                    }
+                    {show && 
+                        <i className="bi bi-eye-slash" onClick={eyePassword}></i>
+                    }
                     </label>
                     {password === "" && 
                         <div className={styles.password_verification}>
@@ -115,9 +137,9 @@ const Form = ({user}) => {
         </form>
         }
         {userRecaptcha &&
-            <div>
-                <p>Welcome</p>
-            </div>
+          <div>
+             <p>Welcome</p>
+          </div>
         }
     </div>
   )

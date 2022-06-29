@@ -83,3 +83,11 @@ input {
     text-align: center;
     margin-bottom: 10px;
 }
+
+.label_password {
+    width: 250px;
+    margin-left: 0;
+    margin-top: .3em;
+    display: flex;
+    flex-direction: row;
+}
